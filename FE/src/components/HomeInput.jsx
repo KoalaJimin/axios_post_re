@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import BoardList from './BoardList';
+import axios from 'axios';
 
 const InputDiv = styled.div`
   width: 100%;
@@ -65,12 +66,59 @@ const InputDiv = styled.div`
 `;
 
 const HomeInput = () => {
+  const [inputs, setInputs] = useState({
+    title: '',
+    content: '',
+  });
+
+  const { title, content } = inputs;
+  const onChange = (e) => {
+    const { value, name } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
+  };
+
+  const onSubmit = () => {
+    try {
+      // HTTP POST 요청으로 새로운 게시물 생성
+      axios
+        .post('http://127.0.0.1:8000/posts', {
+          title: inputs.title,
+          content: inputs.content,
+        })
+        .then(() => window.location.reload());
+
+      // 입력값 초기화
+      setInputs({
+        title: '',
+        content: '',
+      });
+    } catch (error) {
+      // 에러 발생 시 에러 처리
+      console.error('Error creating new post:', error);
+    }
+  };
+
   return (
     <>
       <InputDiv>
-        <input className="inputTitle" />
-        <textarea className="inputContent" />
-        <div className="submit">저장</div>
+        <input
+          className="inputTitle"
+          name="title"
+          value={title}
+          onChange={onChange}
+        />
+        <textarea
+          className="inputContent"
+          name="content"
+          value={content}
+          onChange={onChange}
+        />
+        <div className="submit" onClick={onSubmit}>
+          저장
+        </div>
       </InputDiv>
       <BoardList />
     </>

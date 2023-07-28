@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
-import BoardList from "./components/BoardList";
-import BoardDetail from "./components/BoardDetail";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import BoardList from './components/BoardList';
+import BoardDetail from './components/BoardDetail';
 import HomeInput from './components/HomeInput';
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeInput />} />
         <Route path="/post" element={<BoardList />} />
-        <Route path="/post/detail" element={<BoardDetail />} />
+        <Route path="/post/:postID" element={<BoardDetail />} />
       </Routes>
     </>
   );

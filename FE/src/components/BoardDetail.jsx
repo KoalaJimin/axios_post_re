@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 const DetailBlock = styled.div`
@@ -21,12 +23,27 @@ const PostContent = styled.div`
   margin-top: 1rem;
 `;
 
-const BoardDetail = () => {
+const BoardDetail = ({ postList }) => {
+  const { postID } = useParams();
+  const [post, setPost] = useState(null);
+  const [postLoading, setPostLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get(`http://127.0.0.1:8000/posts/${postID}`).then((response) => {
+      setPost(response.data);
+      setPostLoading(false);
+    });
+  }, []);
+
   return (
     <>
       <DetailBlock>
-        <PostTitle>제목</PostTitle>
-        <PostContent>내용</PostContent>
+        <PostTitle>{post && post.title}</PostTitle>
+        {postLoading ? (
+          <h2>loading...</h2>
+        ) : (
+          <PostContent>{post && post.content}</PostContent>
+        )}
       </DetailBlock>
     </>
   );
